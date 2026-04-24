@@ -1,169 +1,74 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PortoBurger Co. · Expansion Blueprint · Carlos Áthyla</title>
+<!-- APENAS TRECHOS CORRIGIDOS — O RESTO DO SEU HTML PERMANECE IGUAL -->
 
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- 🔧 CORREÇÃO 1: ANO -->
+<div class="nav-title">OpEx Consultant · Carlos Áthyla · 2026</div>
 
-<style>
-/* (mantive seu CSS original — está correto e bem estruturado) */
-:root {
-  --andy-teal: #2EC4B6;
-  --andy-dark: #1a2e2c;
-  --bg: #0d1f1e;
-  --surface: #152624;
-  --surface2: #1c3230;
-  --text: #e8f4f3;
-  --muted: #7db8b4;
-  --accent: #f4a261;
-  --danger: #e76f51;
-  --success: #52b788;
-  --border: rgba(46,196,182,0.15);
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  font-family: 'Inter', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-/* NAV */
-.nav {
-  display: flex;
-  justify-content: space-between;
-  padding: 12px 32px;
-  border-bottom: 1px solid var(--border);
-}
-
-.nav-title {
-  font-size: 13px;
-  color: var(--muted);
-}
-
-/* SLIDES */
-.slides-wrapper {
-  flex: 1;
-  position: relative;
-}
-
-.slide {
-  position: absolute;
-  inset: 0;
-  padding: 48px;
-  opacity: 0;
-  transform: translateX(60px);
-  transition: .4s;
-}
-
-.slide.active {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-/* BOTÃO */
-.btn {
-  padding: 8px 14px;
-  cursor: pointer;
-  background: var(--andy-teal);
-  border: none;
-  border-radius: 6px;
-}
-
-/* PROGRESS */
-.bottom-bar {
-  height: 4px;
-  background: var(--surface);
-}
-.bottom-bar-fill {
-  height: 100%;
-  background: var(--andy-teal);
-}
-</style>
-</head>
-
-<body>
-
-<nav class="nav">
-  <div>Andy · PortoBurger</div>
-  <div class="nav-title">OpEx Consultant · Carlos Áthyla · 2026</div>
-  <div>
-    <button class="btn" onclick="prevSlide()">←</button>
-    <button class="btn" onclick="nextSlide()">→</button>
-  </div>
-</nav>
-
-<div class="slides-wrapper">
-
-  <div class="slide active">
-    <h1>Expansion Blueprint</h1>
-    <p>Portugal → España → Mundo</p>
-  </div>
-
-  <div class="slide">
-    <h1>Diagnóstico</h1>
-    <p>Solo 40% de adopción</p>
-  </div>
-
-  <div class="slide">
-    <h1>Plan 90 días</h1>
-    <p>Estabilizar → Centralizar → Escalar</p>
-  </div>
-
-  <div class="slide">
-    <h1>Cierre</h1>
-    <p>Expansión con cultura</p>
-  </div>
-
+<!-- 🔧 CORREÇÃO 2: ANO FINAL -->
+<div style="margin-top: 28px; font-size: 13px; color: #3a5a58;">
+  Preparado por <strong style="color: var(--muted);">
+  Carlos Áthyla Fidelis de Lima</strong> · OpEx Consultant Candidate · 2026
 </div>
 
-<div class="bottom-bar">
-  <div class="bottom-bar-fill" id="progressBar" style="width:25%"></div>
-</div>
-
+<!-- 🔧 CORREÇÃO 3: FUNÇÃO goTo SEGURA -->
 <script>
-const slides = document.querySelectorAll('.slide');
-let current = 0;
-const total = slides.length;
+  const totalSlides = 9;
+  let current = 0;
 
-function showSlide(index) {
-  if (!slides[index]) return;
+  function goTo(index) {
+    const slides = document.querySelectorAll('.slide');
 
-  slides[current].classList.remove('active');
-  current = Math.max(0, Math.min(index, total - 1));
-  slides[current].classList.add('active');
+    if (!slides[current]) return;
 
-  document.getElementById('progressBar').style.width =
-    ((current + 1) / total) * 100 + '%';
-}
+    slides[current].classList.remove('active');
+    slides[current].classList.add('exit');
 
-function nextSlide() {
-  if (current < total - 1) showSlide(current + 1);
-}
+    setTimeout(() => {
+      if (slides[current]) {
+        slides[current].classList.remove('exit');
+      }
+    }, 450);
 
-function prevSlide() {
-  if (current > 0) showSlide(current - 1);
-}
+    current = Math.max(0, Math.min(index, totalSlides - 1));
 
-/* 🔥 CORREÇÃO DO BUG AQUI */
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowRight' || e.code === 'Space') {
-    e.preventDefault();
-    nextSlide();
+    if (slides[current]) {
+      slides[current].classList.add('active');
+    }
+
+    updateUI();
   }
 
-  if (e.key === 'ArrowLeft') {
-    prevSlide();
+  function nextSlide() {
+    if(current < totalSlides-1) goTo(current+1);
   }
-});
+
+  function prevSlide() {
+    if(current > 0) goTo(current-1);
+  }
+
+  function updateUI() {
+    document.getElementById('slideCounter').textContent = `${current+1} / ${totalSlides}`;
+    document.getElementById('progressBar').style.width = `${((current+1)/totalSlides)*100}%`;
+
+    document.querySelectorAll('.nav-dot').forEach((d,i) => {
+      d.classList.toggle('active', i === current);
+    });
+  }
+
+  // NAV DOTS
+  const dotsContainer = document.getElementById('navDots');
+  for(let i = 0; i < totalSlides; i++) {
+    const d = document.createElement('div');
+    d.className = 'nav-dot' + (i===0?' active':'');
+    d.onclick = () => goTo(i);
+    dotsContainer.appendChild(d);
+  }
+
+  // 🔥 CORREÇÃO CRÍTICA AQUI
+  document.addEventListener('keydown', e => {
+    if(e.key === 'ArrowRight' || e.code === 'Space') {
+      e.preventDefault();
+      nextSlide();
+    }
+    if(e.key === 'ArrowLeft') prevSlide();
+  });
 </script>
-
-</body>
-</html>
